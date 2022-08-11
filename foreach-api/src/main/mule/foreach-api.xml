@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:batch="http://www.mulesoft.org/schema/mule/batch" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/batch/current/mule-batch.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cc58b7b7-89b6-4cc3-b95a-abc8ffe6753c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="b07c940c-7cea-4e3f-99ba-f0f57d4b78a4" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Swetha@1994" database="db15" />
+	</db:config>
+	<db:config name="Database_Config1" doc:name="Database Config" doc:id="2fbf2e1f-763f-44ed-9dba-398d55296609" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Swetha@1994" database="db15" />
+	</db:config>
+	<db:config name="Database_Config2" doc:name="Database Config" doc:id="42f09f08-7d48-4018-892e-30907b426541" >
+		<db:my-sql-connection host="localhost" port="3306" user="rooto" password="12157851" database="db15" />
+	</db:config>
+	<flow name="foreach-apiFlow" doc:id="fb43f4fb-eb20-4d29-bfb3-8525bcca6983" >
+		<http:listener doc:name="Listener" doc:id="a370f5e9-c50d-485d-961c-31cd960cfae3" config-ref="HTTP_Listener_config" path="error"/>
+		<logger level="INFO" doc:name="Logger" doc:id="48649be0-e80c-411d-b453-8700da0cb048" message="start"/>
+		<try doc:name="Try" doc:id="c5b2aa92-42fd-4ad2-a3a0-79026ad56107" >
+			<db:insert doc:name="Insert" doc:id="c26dbd84-17a0-4016-9bb7-787efd88ff28" config-ref="Database_Config2">
+			<db:sql><![CDATA[inserted into]]></db:sql>
+		</db:insert>
+			<error-handler>
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9f2fbfee-bd75-42ad-9390-6f9b4e57bd99" type="ANY">
+					<ee:transform doc:name="Transform Message" doc:id="bd5197fb-bf15-459f-b503-930b919e93bb" >
+						<ee:message >
+							<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"message":"check ur network connection"
+}]]></ee:set-payload>
+						</ee:message>
+					</ee:transform>
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<logger level="INFO" doc:name="Logger" doc:id="db8864c6-5251-4acb-a5a4-d1d744b25158" message="middle"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c3307102-5a99-422b-aca8-776016c82802" message="end"/>
+	</flow>
+</mule>
