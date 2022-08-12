@@ -25,6 +25,7 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 		<logger level="INFO" doc:name="Logger" doc:id="a2ed7f96-46ae-419e-9914-27cc4ea7c561" message="hi"/>
 		<try doc:name="Try" doc:id="c5b2aa92-42fd-4ad2-a3a0-79026ad56107" >
 			<db:insert doc:name="Insert" doc:id="c26dbd84-17a0-4016-9bb7-787efd88ff28" config-ref="Database_Config2">
+				<logger level="INFO" doc:name="Logger" doc:id="a2ed7f96-46ae-419e-9914-27cc4ea7c561" message="welcome"/>
 			<db:sql><![CDATA[inserted into]]></db:sql>
 		</db:insert>
 			<error-handler>
