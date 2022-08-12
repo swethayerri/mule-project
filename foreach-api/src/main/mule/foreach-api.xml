@@ -22,6 +22,7 @@ http://www.mulesoft.org/schema/mule/batch http://www.mulesoft.org/schema/mule/ba
 	<flow name="foreach-apiFlow" doc:id="fb43f4fb-eb20-4d29-bfb3-8525bcca6983" >
 		<http:listener doc:name="Listener" doc:id="a370f5e9-c50d-485d-961c-31cd960cfae3" config-ref="HTTP_Listener_config" path="error"/>
 		<logger level="INFO" doc:name="Logger" doc:id="48649be0-e80c-411d-b453-8700da0cb048" message="start"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a2ed7f96-46ae-419e-9914-27cc4ea7c561" message="hi"/>
 		<try doc:name="Try" doc:id="c5b2aa92-42fd-4ad2-a3a0-79026ad56107" >
 			<db:insert doc:name="Insert" doc:id="c26dbd84-17a0-4016-9bb7-787efd88ff28" config-ref="Database_Config2">
 			<db:sql><![CDATA[inserted into]]></db:sql>
