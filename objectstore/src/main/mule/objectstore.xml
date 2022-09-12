@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="cf2d4d25-51d6-4152-b9ba-69d2db1704c1" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="d70902f8-78d7-47e8-bbb2-dc5f2579dd8d" />
+	<flow name="objectstoreFlow" doc:id="5f0102db-592a-483b-b84e-f43f4c66730f" >
+		<http:listener doc:name="Listener" doc:id="8e8de561-cb80-4a28-ad26-cd7bf0c8894f" config-ref="HTTP_Listener_config" path="s"/>
+		<set-variable value="#[attributes.queryParams.name]" doc:name="Set Variable" doc:id="5a83fc4c-67be-40ec-9c4f-5465ea06940a" variableName="name"/>
+		<set-variable value="#[attributes.queryParams.id]" doc:name="Set Variable" doc:id="190541f4-860b-4d06-8a15-59c7d542e57d" variableName="id"/>
+		<os:store doc:name="Store" doc:id="a920c15b-1d97-43d7-afc0-d0f1ad2f23d0" key="#[vars.name]" objectStore="Object_store">
+			<os:value ><![CDATA[#[vars.id]]]></os:value>
+		</os:store>
+	</flow>
+	<flow name="objectstoreFlow1" doc:id="32b6415d-e48a-4c2a-9df1-efe87b49e0c0" >
+		<http:listener doc:name="Listener" doc:id="6ee7b760-fc9d-4133-be49-7f783ed2d9ae" config-ref="HTTP_Listener_config" path="ral"/>
+		<os:retrieve-all doc:name="Retrieve all" doc:id="df44133c-50e5-474f-92c1-01e43ca29a85" objectStore="Object_store"/>
+	</flow>
+	<flow name="objectstoreFlow2" doc:id="8215c09f-6284-4031-872b-a4f33166aae9" >
+		<http:listener doc:name="Listener" doc:id="7c8dbe52-f803-4757-b614-6e8491798515" config-ref="HTTP_Listener_config" path="rak"/>
+		<os:retrieve-all-keys doc:name="Retrieve all keys" doc:id="b73669fe-26aa-478c-9302-497ad30aaedc" objectStore="Object_store"/>
+	</flow>
+	<flow name="objectstoreFlow3" doc:id="86c16f94-fcdf-4c9d-b956-b8ea1344229c" >
+		<http:listener doc:name="Listener" doc:id="bedd7af3-d62f-4e00-8559-ad10566cc033" config-ref="HTTP_Listener_config" path="r"/>
+		<os:retrieve doc:name="Retrieve" doc:id="5d898035-6e3e-4bad-a880-174ed7b6a552" key="#[attributes.queryParams.name]" objectStore="Object_store"/>
+	</flow>
+	<flow name="objectstoreFlow4" doc:id="38a5db9a-148a-4f6f-8b71-8f4b66dc84f5" >
+		<http:listener doc:name="Listener" doc:id="c19ad13f-2d79-4154-9314-63a090c85da4" config-ref="HTTP_Listener_config" path="c"/>
+		<os:contains doc:name="Contains" doc:id="229653d5-b604-49f9-a44a-9686de5a234d" key="#[attributes.queryParams.name]" objectStore="Object_store"/>
+		<ee:transform doc:name="Transform Message" doc:id="3212a549-24a4-4ee9-bffb-fe1298192aa6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="objectstoreFlow5" doc:id="747d357c-805f-4c7a-b3a2-1d12d1a720bf" >
+		<http:listener doc:name="Listener" doc:id="8ba7214e-04f3-4d78-a793-49ba1454d644" config-ref="HTTP_Listener_config" path="rm"/>
+		<os:remove doc:name="Remove" doc:id="2b6f3cbd-da55-4ae1-b380-0ed26eecb22c" key="#[attributes.queryParams.name]"/>
+	</flow>
+</mule>
